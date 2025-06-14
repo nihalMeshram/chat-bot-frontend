@@ -1,0 +1,30 @@
+<header class="fixed top-0 left-0 right-0 z-10 bg-white shadow-md p-4 flex justify-between items-center border-b">
+  <div class="flex gap-6 items-center">
+    <a routerLink="/" class="text-2xl font-bold text-blue-700 cursor-pointer hover:text-blue-800 transition">
+      ChatBot
+    </a>
+    <nav class="flex gap-6">
+      <a *ngIf="userRole === 'admin'" routerLink="/manage-users"
+        routerLinkActive="text-blue-600 font-semibold border-b-2 border-blue-600"
+        class="text-gray-600 hover:text-blue-600 font-medium transition pb-1">
+        Users
+      </a>
+      <a *ngIf="userRole === 'admin' || userRole === 'editor'" routerLink="/documents"
+        routerLinkActive="text-blue-600 font-semibold border-b-2 border-blue-600"
+        class="text-gray-600 hover:text-blue-600 font-medium transition pb-1">
+        Documents
+      </a>
+    </nav>
+  </div>
+  <div class="flex gap-4 items-center">
+    <span class="text-gray-700 font-medium">{{ user?.fullName }}</span>
+    <button (click)="onLogout()"
+      class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition cursor-pointer">
+      Logout
+    </button>
+  </div>
+</header>
+
+<main class="pt-[70px] h-[calc(100vh-70px)]">
+  <router-outlet />
+</main>
