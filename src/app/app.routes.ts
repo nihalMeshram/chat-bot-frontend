@@ -3,6 +3,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { AuthGuard } from './guards/auth.guard';
 import { NavBar } from './layouts/nav-bar';
+import { Home } from './pages/home/home';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -13,6 +14,8 @@ export const routes: Routes = [
     path: '',
     component: NavBar,
     canActivate: [AuthGuard()],
-    children: [ ]
+    children: [
+      { path: 'home', component: Home },
+    ]
   },
 ];

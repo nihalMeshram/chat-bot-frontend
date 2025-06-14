@@ -1,0 +1,36 @@
+<div class="relative h-[calc(100vh-80px)]">
+  <!-- Initial view (centered header + input) -->
+  <div *ngIf="!responseText" class="flex flex-col items-center justify-center h-full px-4 text-center">
+    <div class="w-full max-w-2xl">
+      <h1 class="text-3xl font-semibold mb-6">👋 How can I help you today?</h1>
+      <div class="flex items-center border rounded px-4 py-2 bg-white shadow">
+        <input type="text" [(ngModel)]="inputText" (keydown)="onKeydown($event)" placeholder="Ask me anything..."
+          class="flex-1 outline-none p-2" />
+        <button (click)="onSubmit()" class="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Response view (scrollable + input fixed bottom) -->
+  <div *ngIf="responseText" class="h-full flex flex-col items-center">
+    <!-- Scrollable response area -->
+    <div class="flex-1 w-full max-w-2xl overflow-y-auto px-4 py-2 pb-20 whitespace-pre-line">
+      <div class="bg-gray-100 p-4 rounded shadow">
+        {{ responseText }}
+      </div>
+    </div>
+
+    <!-- Fixed input at bottom -->
+    <div class="w-full max-w-2xl px-4 py-3 border-t bg-white shadow fixed bottom-0 left-1/2 transform -translate-x-1/2">
+      <div class="flex items-center border rounded px-4 py-2 bg-white shadow">
+        <input type="text" [(ngModel)]="inputText" (keydown)="onKeydown($event)" placeholder="Ask me anything..."
+          class="flex-1 outline-none p-2" />
+        <button (click)="onSubmit()" class="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
