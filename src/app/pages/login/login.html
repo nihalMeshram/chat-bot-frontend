@@ -1,0 +1,48 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
+    <!-- Show Success Message -->
+    <p *ngIf="successMessage" class="text-green-600 text-sm mb-4 text-center">
+      {{ successMessage }}
+    </p>
+
+    <!-- Show Server Errors -->
+    <div *ngIf="errorMessages.length" class="text-red-600 text-sm mb-4">
+      <ul class="list-disc pl-5">
+        <li *ngFor="let error of errorMessages">{{ error }}</li>
+      </ul>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-4">
+      <label class="block mb-1 text-gray-700" for="email">Email</label>
+      <input id="email" type="email" formControlName="email" class="w-full p-2 border rounded" />
+      <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-sm text-red-600 mt-1">
+        <span *ngIf="form.get('email')?.errors?.['required']">Email is required.</span>
+        <span *ngIf="form.get('email')?.errors?.['email']">Email is invalid.</span>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-4">
+      <label class="block mb-1 text-gray-700" for="password">Password</label>
+      <input id="password" type="password" formControlName="password" class="w-full p-2 border rounded" />
+      <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="text-sm text-red-600 mt-1">
+        <span *ngIf="form.get('password')?.errors?.['required']">Password is required.</span>
+        <span *ngIf="form.get('password')?.errors?.['minlength']">
+          Password must be at least 4 characters.
+        </span>
+      </div>
+    </div>
+
+    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+      Login
+    </button>
+
+    <p class="mt-4 text-center text-sm">
+      Don't have an account?
+      <a routerLink="/register" class="text-blue-600 hover:underline">Register</a>
+    </p>
+  </form>
+</div>
