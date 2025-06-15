@@ -1,0 +1,26 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/nihalmeshram/chat-bot-frontend:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/nihalmeshram/chat-bot-frontend:latest
