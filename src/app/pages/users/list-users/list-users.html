@@ -12,10 +12,10 @@
   </button>
 </div>
 
-<div *ngIf="loading" class="text-center text-gray-500 mt-8">Loading users...</div>
-<div *ngIf="error" class="text-center text-red-500 mt-8">{{ error }}</div>
+<div *ngIf="loading" class="text-center text-gray-500 mt-2">Loading users...</div>
+<div *ngIf="error" class="text-center text-red-500 mt-2">{{ error }}</div>
 
-<div *ngIf="!loading && !error" class="overflow-x-auto max-w-6xl mx-auto">
+<div *ngIf="!loading" class="overflow-x-auto max-w-6xl mx-auto">
   <table class="min-w-full border rounded-lg shadow bg-white">
     <thead class="bg-cyan-600 text-white">
       <tr>
