@@ -1,0 +1,60 @@
+<div class="max-w-xl mx-auto mt-8 p-6 bg-white shadow rounded">
+  <h2 class="text-2xl font-semibold mb-6 text-center text-blue-700">Edit User Details</h2>
+
+  <div *ngIf="errorMessages.length > 0" class="text-red-600 mb-4">
+    <ul>
+      <li *ngFor="let err of errorMessages">{{ err }}</li>
+    </ul>
+  </div>
+  
+  <div *ngIf="successMessage" class="text-green-600 mb-4">
+    {{ successMessage }}
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="userForm">
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1">Full Name</label>
+      <input type="text" formControlName="fullName" class="w-full border px-3 py-2 rounded" />
+      <div class="text-red-600 text-sm mt-1"
+        *ngIf="userForm.get('fullName')?.invalid && userForm.get('fullName')?.touched">
+        Full name is required (min 2 characters).
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1">Email</label>
+      <input type="email" formControlName="email" class="w-full border px-3 py-2 rounded" />
+      <div class="text-red-600 text-sm mt-1" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+        Valid email is required.
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1">Role</label>
+      <select formControlName="role" class="w-full border px-3 py-2 rounded">
+        <option *ngFor="let role of userRoles" [value]="role">{{ role }}</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1">Created At</label>
+      <input type="text" [value]="createdAt | date: 'medium'" disabled class="w-full bg-gray-100 px-3 py-2 rounded" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1">Updated At</label>
+      <input type="text" [value]="updatedAt | date: 'medium'" disabled class="w-full bg-gray-100 px-3 py-2 rounded" />
+    </div>
+
+    <div class="flex justify-between">
+      <button type="button" routerLink="/users" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 cursor-pointer">
+        Back
+      </button>
+      <button type="submit" [disabled]="userForm.invalid"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
