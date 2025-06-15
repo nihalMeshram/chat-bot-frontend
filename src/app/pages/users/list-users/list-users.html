@@ -1,0 +1,151 @@
+<div class="sticky top-[65px] z-[1] bg-white py-2 max-w-6xl mx-auto relative h-14">
+  <!-- Centered heading -->
+  <h2
+    class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-semibold text-blue-700">
+    All Users Details
+  </h2>
+
+  <!-- Right aligned button -->
+  <button routerLink="/users/add"
+    class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
+    Add User
+  </button>
+</div>
+
+<div *ngIf="loading" class="text-center text-gray-500 mt-8">Loading users...</div>
+<div *ngIf="error" class="text-center text-red-500 mt-8">{{ error }}</div>
+
+<div *ngIf="!loading && !error" class="overflow-x-auto max-w-6xl mx-auto">
+  <table class="min-w-full border rounded-lg shadow bg-white">
+    <thead class="bg-cyan-600 text-white">
+      <tr>
+        <th class="px-4 py-3 border-b">Name</th>
+        <th class="px-4 py-3 border-b">Email</th>
+        <th class="px-4 py-3 border-b">Role</th>
+        <th class="px-4 py-3 border-b">Created On</th>
+        <th class="px-4 py-3 border-b">Status</th>
+        <th class="px-4 py-3 border-b text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index" class="border-t hover:bg-gray-50 transition"
+        [ngClass]="{ 'bg-white': i % 2 === 0, 'bg-gray-300': i % 2 === 1 }">
+
+        <td class="px-4 py-2 text-center">{{ user.fullName }}</td>
+        <td class="px-4 py-2 text-center">{{ user.email }}</td>
+        <td class="px-4 py-2 text-center capitalize">{{ user.role }}</td>
+        <td class="px-4 py-2 text-center">{{ user.createdAt | date: 'medium' }}</td>
+        <td class="px-4 py-2 text-center">
+          <span *ngIf="!user.deletedAt; else archived"
+            class="bg-green-100 text-green-800 text-sm font-medium pb-1 px-2.5 py-0.5 rounded">
+            Active
+          </span>
+          <ng-template #archived>
+            <span class="bg-red-200 text-red-800 text-sm font-medium pb-1 px-2.5 py-0.5 rounded">
+              Archived
+            </span>
+          </ng-template>   </td>
+        <td class="px-4 py-2 text-center flex justify-center gap-2">
+          <!-- Edit -->
+          <button [routerLink]="['/users/edit', user.id]" class="text-blue-600 hover:text-blue-800 cursor-pointer"
+            title="Edit">
+            <svg width="25px" height="25px" viewBox="0 0 1024 1024" class="icon" version="1.1"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M823.3 938.8H229.4c-71.6 0-129.8-58.2-129.8-129.8V215.1c0-71.6 58.2-129.8 129.8-129.8h297c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7h-297c-24.5 0-44.4 19.9-44.4 44.4V809c0 24.5 19.9 44.4 44.4 44.4h593.9c24.5 0 44.4-19.9 44.4-44.4V512c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v297c0 71.6-58.2 129.8-129.8 129.8z"
+                fill="#3688FF" />
+              <path
+                d="M483 756.5c-1.8 0-3.5-0.1-5.3-0.3l-134.5-16.8c-19.4-2.4-34.6-17.7-37-37l-16.8-134.5c-1.6-13.1 2.9-26.2 12.2-35.5l374.6-374.6c51.1-51.1 134.2-51.1 185.3 0l26.3 26.3c24.8 24.7 38.4 57.6 38.4 92.7 0 35-13.6 67.9-38.4 92.7L513.2 744c-8.1 8.1-19 12.5-30.2 12.5z m-96.3-97.7l80.8 10.1 359.8-359.8c8.6-8.6 13.4-20.1 13.4-32.3 0-12.2-4.8-23.7-13.4-32.3L801 218.2c-17.9-17.8-46.8-17.8-64.6 0L376.6 578l10.1 80.8z"
+                fill="#5F6379" />
+            </svg>
+          </button>
+
+          <!-- Delete -->
+          <button (click)="onDelete(user)" [disabled]="user.deletedAt" [ngClass]="{
+              'text-red-600 hover:text-red-800 cursor-pointer': !user.deletedAt,
+              'opacity-50 cursor-not-allowed': user.deletedAt
+            }" title="Delete">
+            <svg width="25px" height="25px" viewBox="0 0 1024 1024" class="icon" version="1.1"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M779.5 1002.7h-535c-64.3 0-116.5-52.3-116.5-116.5V170.7h768v715.5c0 64.2-52.3 116.5-116.5 116.5zM213.3 256v630.1c0 17.2 14 31.2 31.2 31.2h534.9c17.2 0 31.2-14 31.2-31.2V256H213.3z"
+                fill="#3688FF" />
+              <path
+                d="M917.3 256H106.7C83.1 256 64 236.9 64 213.3s19.1-42.7 42.7-42.7h810.7c23.6 0 42.7 19.1 42.7 42.7S940.9 256 917.3 256zM618.7 128H405.3c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h213.3c23.6 0 42.7 19.1 42.7 42.7S642.2 128 618.7 128zM405.3 725.3c-23.6 0-42.7-19.1-42.7-42.7v-256c0-23.6 19.1-42.7 42.7-42.7S448 403 448 426.6v256c0 23.6-19.1 42.7-42.7 42.7zM618.7 725.3c-23.6 0-42.7-19.1-42.7-42.7v-256c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v256c-0.1 23.6-19.2 42.7-42.7 42.7z"
+                fill="#5F6379" />
+            </svg>
+          </button>
+
+          <!-- Restore -->
+          <button (click)="onRestore(user)" [disabled]="!user.deletedAt" [ngClass]="{
+              'text-green-600 hover:text-green-800 cursor-pointer': user.deletedAt,
+              'opacity-50 cursor-not-allowed': !user.deletedAt
+            }" title="Restore">
+            <svg fill="#3688FF" width="30px" height="30px" viewBox="0 0 64 64" version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+              <g id="SVGRepo_bgCarrier" stroke-width="0" />
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+              <g id="SVGRepo_iconCarrier">
+                <rect id="Icons" x="-192" y="-256" width="1280" height="800" style="fill:none;" />
+                <g id="Icons1" serif:id="Icons">
+                  <g id="Strike"> </g>
+                  <g id="H1"> </g>
+                  <g id="H2"> </g>
+                  <g id="H3"> </g>
+                  <g id="list-ul"> </g>
+                  <g id="hamburger-1"> </g>
+                  <g id="hamburger-2"> </g>
+                  <g id="list-ol"> </g>
+                  <g id="list-task"> </g>
+                  <g id="trash"> </g>
+                  <g id="vertical-menu"> </g>
+                  <g id="horizontal-menu"> </g>
+                  <g id="sidebar-2"> </g>
+                  <g id="Pen"> </g>
+                  <g id="Pen1" serif:id="Pen"> </g>
+                  <g id="clock"> </g>
+                  <g id="external-link"> </g>
+                  <g id="hr"> </g>
+                  <g id="info"> </g>
+                  <g id="warning"> </g>
+                  <g id="plus-circle"> </g>
+                  <g id="minus-circle"> </g>
+                  <g id="vue"> </g>
+                  <g id="cog"> </g>
+                  <g id="logo"> </g>
+                  <path
+                    d="M49.71,20.332l0,29.11c-0.043,3.347 -2.864,6.296 -6.277,6.427c-7.463,0.096 -14.927,0.002 -22.391,0.002c-3.396,-0.043 -6.385,-2.959 -6.429,-6.429l0,-29.11l-4.443,0l0,-4l9.106,0l0,-1.992c0.043,-3.347 2.865,-6.296 6.278,-6.428c3.071,-0.039 10.144,-0.039 13.215,0c3.346,0.129 6.234,3.013 6.277,6.428l0,1.992l9.106,0l0,4l-4.442,0Zm-4,0l-27.099,0c-0.014,9.72 -0.122,19.44 0.003,29.159c0.048,1.251 1.125,2.331 2.379,2.379c7.445,0.096 14.892,0.096 22.337,0c1.273,-0.049 2.363,-1.162 2.38,-2.454l0,-29.084Zm-11.545,28.938l-4.005,0l0,-19.109l-7.414,7.413l-2.832,-2.832l12.246,-12.246l0.001,0.001l0.001,-0.001l12.247,12.246l-2.833,2.832l-7.411,-7.411l0,19.107Zm6.845,-32.938c-0.014,-0.831 0,-1.973 0,-1.973c0,0 -0.059,-2.418 -2.344,-2.448c-3.003,-0.038 -10.007,-0.038 -13.01,0c-1.273,0.049 -2.363,1.163 -2.38,2.455l0,1.966l17.734,0Z"
+                    style="fill-rule:nonzero;" />
+                  <g id="radio-check"> </g>
+                  <g id="eye-slash"> </g>
+                  <g id="eye"> </g>
+                  <g id="toggle-off"> </g>
+                  <g id="shredder"> </g>
+                  <g id="spinner--loading--dots-" serif:id="spinner [loading, dots]"> </g>
+                  <g id="react"> </g>
+                  <g id="check-selected"> </g>
+                  <g id="turn-off"> </g>
+                  <g id="code-block"> </g>
+                  <g id="user"> </g>
+                  <g id="coffee-bean"> </g>
+                  <g id="coffee-beans">
+                    <g id="coffee-bean1" serif:id="coffee-bean"> </g>
+                  </g>
+                  <g id="coffee-bean-filled"> </g>
+                  <g id="coffee-beans-filled">
+                    <g id="coffee-bean2" serif:id="coffee-bean"> </g>
+                  </g>
+                  <g id="clipboard"> </g>
+                  <g id="clipboard-paste"> </g>
+                  <g id="clipboard-copy"> </g>
+                  <g id="Layer1"> </g>
+                </g>
+              </g>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
