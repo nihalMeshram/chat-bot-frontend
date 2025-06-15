@@ -1,0 +1,34 @@
+# Node modules (reinstalled in image)
+node_modules
+dist
+tmp
+temp
+
+# Build output
+*.log
+*.tsbuildinfo
+
+# Environment files (optional if not needed inside the image)
+.env
+.env.*
+
+# OS or IDE files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Angular specific
+.angular
+.angular-cache
+
+# Git files
+.git
+.gitignore
+
+# Dockerfile itself (optional)
+Dockerfile
+Dockerfile.dev
+
+# NPM cache
+.npm
