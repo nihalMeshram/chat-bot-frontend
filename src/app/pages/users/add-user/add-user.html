@@ -1,0 +1,68 @@
+<div class="max-w-xl mx-auto mt-8 p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-semibold mb-6 text-center text-blue-700">Create New User</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="text-green-600 font-medium mt-4 text-center">
+      {{ successMessage }}
+    </div>
+    
+    <!-- Error Messages -->
+    <div *ngIf="errorMessages.length" class="mt-4 text-red-600">
+      <ul class="list-disc pl-5">
+        <li *ngFor="let error of errorMessages">{{ error }}</li>
+      </ul>
+    </div>
+
+    <!-- Full Name -->
+    <div>
+      <label class="block mb-1 font-medium">Full Name</label>
+      <input type="text" formControlName="fullName" class="w-full border rounded px-3 py-2" placeholder="John Doe" />
+      <div *ngIf="form.controls['fullName'].invalid && form.controls['fullName'].touched" class="text-red-600 text-sm mt-1">
+        Full name is required and must not be blank.
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div>
+      <label class="block mb-1 font-medium">Email</label>
+      <input type="email" formControlName="email" class="w-full border rounded px-3 py-2"
+        placeholder="john@example.com" />
+      <div *ngIf="form.controls['email'].invalid && form.controls['email'].touched" class="text-red-600 text-sm mt-1">
+        Enter a valid email.
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div>
+      <label class="block mb-1 font-medium">Password</label>
+      <input type="password" formControlName="password" class="w-full border rounded px-3 py-2"
+        placeholder="********" />
+      <div *ngIf="form.controls['password'].invalid && form.controls['password'].touched" class="text-red-600 text-sm mt-1">
+        Password must be 8+ characters with 1 uppercase, 1 number, and 1 special character.
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div>
+      <label class="block mb-1 font-medium">Role</label>
+      <select formControlName="role" class="w-full border rounded px-3 py-2">
+        <option value="" disabled selected>Select role</option>
+        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+      </select>
+      <div *ngIf="form.controls['role'].invalid && form.controls['role'].touched" class="text-red-600 text-sm mt-1">
+        Please select a role.
+      </div>
+    </div>
+
+    <div class="flex justify-between">
+      <button type="button" routerLink="/users" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 cursor-pointer">
+        Back
+      </button>
+      <!-- Submit Button -->
+      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
+        Create User
+      </button>
+    </div>
+  </form>
+</div>
