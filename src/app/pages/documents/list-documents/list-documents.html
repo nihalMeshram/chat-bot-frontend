@@ -1,0 +1,118 @@
+<div class="sticky top-[65px] z-[1] bg-white py-2 max-w-6xl mx-auto relative h-14">
+  <!-- Centered heading -->
+  <h2
+    class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-semibold text-blue-700">
+    Document Details
+  </h2>
+
+  <!-- Right aligned button -->
+  <input type="file" #fileInput hidden (change)="onFileSelected($event)" />
+  <button (click)="fileInput.click()"
+    class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
+    Upload Document
+  </button>
+</div>
+
+<div *ngIf="loading" class="text-center text-gray-500 mt-2">Loading documents...</div>
+<div *ngIf="error" class="text-center text-red-500 mt-2">{{ error }}</div>
+<div *ngIf="success" class="text-center text-green-600 mt-2">{{ success }}</div>
+
+<div *ngIf="!loading" class="overflow-x-auto max-w-6xl mx-auto">
+  <table class="min-w-full border rounded-lg shadow bg-white">
+    <thead class="bg-cyan-600 text-white">
+      <tr>
+        <th class="px-4 py-3 border-b">Name</th>
+        <th class="px-4 py-3 border-b">Type</th>
+        <th class="px-4 py-3 border-b">Created On</th>
+        <th class="px-4 py-3 border-b">Status</th>
+        <th class="px-4 py-3 border-b text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let document of documents; let i = index" class="border-t hover:bg-gray-50 transition"
+        [ngClass]="{ 'bg-white': i % 2 === 0, 'bg-gray-300': i % 2 === 1 }">
+
+        <td class="px-4 py-2 text-center">{{ document.fileName }}</td>
+        <td class="px-4 py-2 text-center">{{ document.type }}</td>
+        <td class="px-4 py-2 text-center">{{ document.createdAt | date: 'medium' }}</td>
+        <td class="px-4 py-2 text-center">
+          <ng-container [ngSwitch]="document.status">
+            <span *ngSwitchCase="'pending'"
+              class="bg-yellow-100 text-yellow-800 pb-1 text-sm font-medium px-2.5 py-0.5 rounded">
+              Pending
+            </span>
+            <span *ngSwitchCase="'ingesting'"
+              class="bg-blue-100 text-blue-800 pb-1 text-sm font-medium px-2.5 py-0.5 rounded">
+              Ingesting
+            </span>
+            <span *ngSwitchCase="'ingested'"
+              class="bg-green-100 text-green-800 pb-1 text-sm font-medium px-2.5 py-0.5 rounded">
+              Ingested
+            </span>
+            <span *ngSwitchCase="'failed'"
+              class="bg-red-100 text-red-800 text-sm pb-1 font-medium px-2.5 py-0.5 rounded">
+              Failed
+            </span>
+            <span *ngSwitchDefault class="bg-gray-200 text-gray-800 pb-1 text-sm font-medium px-2.5 py-0.5 rounded">
+              Unknown
+            </span>
+          </ng-container>
+        </td>
+        <td class="px-4 py-2 text-center flex justify-center gap-2">
+          <!-- Ingest Document -->
+          <button
+            (click)="onStartDocumentIngestion(document.id)"
+            [disabled]="document.status == 'ingested'"
+            [ngClass]="{
+              'text-blue-600 hover:text-blue-800 cursor-pointer': document.status != 'ingested',
+              'opacity-50 cursor-not-allowed': document.status == 'ingested'
+            }"
+            class="text-blue-600 hover:text-blue-800 cursor-pointer" title="Ingest"
+          >
+            <svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#3688FF">
+              <g id="SVGRepo_bgCarrier" stroke-width="0" />
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+              <g id="SVGRepo_iconCarrier">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M1.5 2h13l.5.5V9h-1V6H2v7h7v1H1.5l-.5-.5v-11l.5-.5zM2 5h12V3H2v2zm5 7v-1.094a1.633 1.633 0 0 1-.469-.265l-.945.539-.5-.86.937-.547a1.57 1.57 0 0 1 0-.547l-.937-.546.5-.86.945.54c.151-.12.308-.209.469-.266V7h1v1.094a1.48 1.48 0 0 1 .469.265l.945-.539.5.86-.937.547a1.57 1.57 0 0 1 0 .546l.937.547-.5.86-.945-.54a1.807 1.807 0 0 1-.469.266V12H7zm-.25-2.5c0 .208.073.385.219.531a.723.723 0 0 0 .531.219.723.723 0 0 0 .531-.219.723.723 0 0 0 .219-.531.723.723 0 0 0-.219-.531.723.723 0 0 0-.531-.219.723.723 0 0 0-.531.219.723.723 0 0 0-.219.531zm5.334 5.5v-1.094a1.634 1.634 0 0 1-.469-.265l-.945.539-.5-.86.938-.547a1.572 1.572 0 0 1 0-.547l-.938-.546.5-.86.945.54c.151-.12.308-.209.47-.266V10h1v1.094a1.486 1.486 0 0 1 .468.265l.945-.539.5.86-.937.547a1.562 1.562 0 0 1 0 .546l.937.547-.5.86-.945-.54a1.806 1.806 0 0 1-.469.266V15h-1zm-.25-2.5c0 .208.073.385.219.531a.723.723 0 0 0 .531.219.723.723 0 0 0 .531-.219.723.723 0 0 0 .22-.531.723.723 0 0 0-.22-.531.723.723 0 0 0-.53-.219.723.723 0 0 0-.532.219.723.723 0 0 0-.219.531z" />
+              </g>
+            </svg>
+          </button>
+
+          <!-- Download -->
+          <button (click)="onDownloadDocument(document.id)" class="text-green-600 hover:text-green-800 cursor-pointer"
+            title="Download">
+            <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="SVGRepo_bgCarrier" stroke-width="0" />
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M4 4a2 2 0 0 1 2-2h8a1 1 0 0 1 .707.293l5 5A1 1 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4zm13.586 4L14 4.414V8h3.586zM12 4H6v16h12V10h-5a1 1 0 0 1-1-1V4zm0 7.5a1 1 0 0 1 1 1v2.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414l.293.293V12.5a1 1 0 0 1 1-1z"
+                  fill="#3688FF" />
+              </g>
+            </svg>
+          </button>
+
+          <!-- Delete -->
+          <button (click)="onDelete(document.id)" class="text-red-600 hover:text-red-800 cursor-pointer" title="Delete">
+            <svg width="25px" height="25px" viewBox="0 0 1024 1024" class="icon" version="1.1"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M779.5 1002.7h-535c-64.3 0-116.5-52.3-116.5-116.5V170.7h768v715.5c0 64.2-52.3 116.5-116.5 116.5zM213.3 256v630.1c0 17.2 14 31.2 31.2 31.2h534.9c17.2 0 31.2-14 31.2-31.2V256H213.3z"
+                fill="#3688FF" />
+              <path
+                d="M917.3 256H106.7C83.1 256 64 236.9 64 213.3s19.1-42.7 42.7-42.7h810.7c23.6 0 42.7 19.1 42.7 42.7S940.9 256 917.3 256zM618.7 128H405.3c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h213.3c23.6 0 42.7 19.1 42.7 42.7S642.2 128 618.7 128zM405.3 725.3c-23.6 0-42.7-19.1-42.7-42.7v-256c0-23.6 19.1-42.7 42.7-42.7S448 403 448 426.6v256c0 23.6-19.1 42.7-42.7 42.7zM618.7 725.3c-23.6 0-42.7-19.1-42.7-42.7v-256c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v256c-0.1 23.6-19.2 42.7-42.7 42.7z"
+                fill="#5F6379" />
+            </svg>
+          </button>
+        </td>
+      </tr>
+      <!-- Show empty row when no documents -->
+      <tr *ngIf="documents.length === 0">
+        <td colspan="5" class="px-4 py-4 text-center text-gray-500">
+          No documents found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
