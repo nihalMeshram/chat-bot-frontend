@@ -16,6 +16,16 @@ export const routes: Routes = [
     canActivate: [AuthGuard()],
     children: [
       { path: 'home', component: Home },
+      {
+        path: 'users',
+        canActivate: [AuthGuard(['admin'])],
+        loadChildren: () => import('./pages/users/users.routes').then(m => m.usersRoutes),
+      },
+      {
+        path: 'documents',
+        canActivate: [AuthGuard(['admin', 'editor'])],
+        loadChildren: () => import('./pages/documents/documents.routes').then(m => m.documentsRoutes),
+      },
     ]
   },
 ];
