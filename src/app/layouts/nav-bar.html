@@ -4,7 +4,7 @@
       ChatBot
     </a>
     <nav class="flex gap-6">
-      <a *ngIf="userRole === 'admin'" routerLink="/manage-users"
+      <a *ngIf="userRole === 'admin'" routerLink="/users"
         routerLinkActive="text-blue-600 font-semibold border-b-2 border-blue-600"
         class="text-gray-600 hover:text-blue-600 font-medium transition pb-1">
         Users
@@ -25,6 +25,6 @@
   </div>
 </header>
 
-<main class="pt-[70px] h-[calc(100vh-70px)]">
+<main class="pt-[65px] h-[calc(100vh-70px)]">
   <router-outlet />
 </main>
